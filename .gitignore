@@ -1,13 +1,7 @@
-/.gradle
-gradle-app.setting
-.*.sw?
-*~
-*.bak
-/local*
-/build
-.gradletasknamecache
+.vagrant/
+.gradle/
+build/
 *.log
 *.iml
 /.idea
-/classes
 deploy_key
