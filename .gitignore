@@ -6,6 +6,8 @@ gradle-app.setting
 /local*
 /build
 .gradletasknamecache
+*.log
 *.iml
 /.idea
 /classes
+deploy_key

@@ -10,7 +10,7 @@ script: ./travis/install.sh
 env:
   global:
     - PUBLISH_BRANCH="mvn-repo"
-    - DEPLOY_KEY_ID="6f7a488aaf79"
+    - DEPLOY_KEY_ID="1645300b04d0"
 
 deploy:
   provider: releases
