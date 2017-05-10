@@ -36,11 +36,12 @@ class JpiPluginSpec extends Specification {
         taskClass.isInstance(project.tasks[taskName])
 
         where:
-        taskName     | taskClass
-        'jpi'        | Task
-        'server'     | ServerTask
-        'localizer'  | LocalizerTask
-        'insertTest' | TestInsertionTask
+        taskName        | taskClass
+        'jpi'           | Task
+        'updateServer'  | UpdateServerTask
+        'server'        | RunServerTask
+        'localizer'     | LocalizerTask
+        'insertTest'    | TestInsertionTask
     }
 
     def 'publishing has been setup'(String projectVersion, String repositoryUrl, String extension) {
