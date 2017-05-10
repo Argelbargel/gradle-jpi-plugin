@@ -90,10 +90,16 @@ class JpiPlugin implements Plugin<Project> {
         def ext = new JpiExtension(gradleProject)
         gradleProject.extensions.jenkinsPlugin = ext
 
-        def server = gradleProject.tasks.create(ServerTask.TASK_NAME, ServerTask)
+        def update = gradleProject.tasks.create(UpdateServerTask.TASK_NAME, UpdateServerTask)
+        update.description = 'Update Jenkins in place with the plugin being developed and its dependencies'
+        update.group = BasePlugin.BUILD_GROUP // TODO
+        update.dependsOn(ext.mainSourceTree().runtimeClasspath)
+
+        def server = gradleProject.tasks.create(RunServerTask.TASK_NAME, RunServerTask)
         server.description = 'Run Jenkins in place with the plugin being developed'
         server.group = BasePlugin.BUILD_GROUP // TODO
         server.dependsOn(ext.mainSourceTree().runtimeClasspath)
+        server.dependsOn(update)
 
         // set build directory for Jenkins test harness, JENKINS-26331
         Test test = gradleProject.tasks.test as Test
@@ -265,7 +271,6 @@ class JpiPlugin implements Plugin<Project> {
         cc.getByName(WarPlugin.PROVIDED_COMPILE_CONFIGURATION_NAME).extendsFrom(jenkinsCoreConfiguration)
         cc.getByName(WarPlugin.PROVIDED_COMPILE_CONFIGURATION_NAME).extendsFrom(jenkinsPluginsConfiguration)
         cc.getByName(WarPlugin.PROVIDED_COMPILE_CONFIGURATION_NAME).extendsFrom(optionalJenkinsPluginsConfiguration)
-        cc.getByName(WarPlugin.PROVIDED_COMPILE_CONFIGURATION_NAME).extendsFrom(jenkinsTestConfiguration)
         cc.getByName(JavaPlugin.TEST_COMPILE_CONFIGURATION_NAME).extendsFrom(jenkinsTestConfiguration)
 
         cc.create(WAR_DEPENDENCY_CONFIGURATION_NAME).

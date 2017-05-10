@@ -15,12 +15,10 @@
  */
 package org.jenkinsci.gradle.plugins.jpi
 
-import org.gradle.util.GFileUtils
+import org.gradle.api.GradleException
 
 import java.util.jar.JarFile
 import org.gradle.api.DefaultTask
-import org.gradle.api.GradleException
-import org.gradle.api.artifacts.Configuration
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -28,7 +26,7 @@ import org.gradle.api.tasks.TaskAction
  *
  * @author Kohsuke Kawaguchi
  */
-class ServerTask extends DefaultTask {
+class RunServerTask extends DefaultTask {
     private static final String HTTP_PORT = 'jenkins.httpPort'
 
     @TaskAction
@@ -39,9 +37,6 @@ class ServerTask extends DefaultTask {
             throw new GradleException('No jenkins.war dependency is specified')
         }
         File war = files.toArray()[0]
-
-        generateHpl()
-        copyPluginDependencies()
 
         def conv = project.extensions.getByType(JpiExtension)
         System.setProperty('JENKINS_HOME', conv.workDir.absolutePath)
@@ -61,29 +56,6 @@ class ServerTask extends DefaultTask {
 
         // make the thread hang
         Thread.currentThread().join()
-    }
-
-    void generateHpl() {
-        def m = new JpiHplManifest(project)
-        def conv = project.extensions.getByType(JpiExtension)
-
-        def hpl = new File(conv.workDir, "plugins/${conv.shortName}.hpl")
-        hpl.parentFile.mkdirs()
-        hpl.withOutputStream { m.write(it) }
-    }
-
-    private copyPluginDependencies() {
-        // create new configuration with plugin dependencies, ignoring the (jar) extension to get the HPI/JPI files
-        Configuration plugins = project.configurations.create('plugins')
-        project.configurations.getByName(JpiPlugin.PLUGINS_DEPENDENCY_CONFIGURATION_NAME).dependencies.each {
-            project.dependencies.add(plugins.name, "${it.group}:${it.name}:${it.version}")
-        }
-
-        // copy the resolved HPI/JPI files to the plugins directory
-        def workDir = project.extensions.getByType(JpiExtension).workDir
-        plugins.resolvedConfiguration.resolvedArtifacts.findAll { it.extension in ['hpi', 'jpi'] }.each {
-            GFileUtils.copyFile(it.file, new File(workDir, "plugins/${it.name}.${it.extension}"))
-        }
     }
 
     private static void setSystemPropertyIfEmpty(String name, String value) {
