@@ -2,7 +2,7 @@
 
 echo "Building branch $TRAVIS_BRANCH (pull-request: $TRAVIS_PULL_REQUEST)..."
 
-GRADLE_TASKS="check"
+GRADLE_TASKS="test"
 if [ "$TRAVIS_TAG" != "" ]; then
     GRADLE_TASKS="$GRADLE_TASKS publish"
 fi
