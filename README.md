@@ -1,7 +1,9 @@
 # Gradle JPI plugin
 
 This is a Gradle plugin for building [Jenkins](http://jenkins-ci.org)
-plugins, written in Groovy or Java.
+plugins, written in Groovy or Java. 
+
+Fork of [jenkinsci/gradle-jpi-plugin](https://github.com/jenkinsci/gradle-jpi-plugin) [![Build Status](https://travis-ci.org/Argelbargel/gitlab-branch-source-plugin.svg?branch=master)](https://travis-ci.org/Argelbargel/gitlab-branch-source-plugin)
 
 ## Configuration
 
