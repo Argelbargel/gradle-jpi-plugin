@@ -139,7 +139,7 @@ class JpiExtension {
         }
 
         if (new VersionNumber(this.coreVersion) > new VersionNumber('1.644')) {
-            testHarnessVersion = '2.0'
+            testHarnessVersion = '2.22'
         }
 
         if (new VersionNumber(this.coreVersion) >= new VersionNumber('2.0')) {
