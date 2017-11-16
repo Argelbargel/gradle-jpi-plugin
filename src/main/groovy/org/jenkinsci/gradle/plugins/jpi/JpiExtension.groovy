@@ -142,6 +142,10 @@ class JpiExtension {
             testHarnessVersion = '2.22'
         }
 
+        if (new VersionNumber(this.coreVersion) > new VersionNumber('2.63')) {
+            testHarnessVersion = '2.31'
+        }
+
         if (new VersionNumber(this.coreVersion) >= new VersionNumber('2.0')) {
             servletApiArtifact = 'javax.servlet-api'
             servletApiVersion = '3.1.0'
@@ -162,17 +166,22 @@ class JpiExtension {
         if (this.coreVersion) {
             project.dependencies {
                 jenkinsCore(
-                        [group: 'org.jenkins-ci.main', name: 'jenkins-core', version: v, ext: 'jar', transitive: true],
+                        [group: 'org.jenkins-ci.main', name: 'jenkins-core', version: v],
                         [group: findBugsGroup, name: 'annotations', version: findBugsVersion],
                         [group: 'javax.servlet', name: servletApiArtifact, version: servletApiVersion],
                 )
 
-                jenkinsWar(group: 'org.jenkins-ci.main', name: 'jenkins-war', version: v, ext: 'war')
+                jenkinsWar(group: 'org.jenkins-ci.main', name: 'jenkins-war', version: v)
 
-                jenkinsTest("org.jenkins-ci.main:jenkins-test-harness:${testHarnessVersion}@jar") { transitive = true }
-                jenkinsTest("org.jenkins-ci.main:ui-samples-plugin:${uiSamplesVersion}@jar",
-                        "org.jenkins-ci.main:jenkins-war:${v}:war-for-test@jar",
-                        'junit:junit-dep:4.10@jar')
+                if (new VersionNumber(this.coreVersion) < new VersionNumber('2.64')) {
+                    jenkinsTest("org.jenkins-ci.main:jenkins-war:${v}:war-for-test")
+                } else {
+                    project.configurations.jenkinsTest.extendsFrom(project.configurations.jenkinsWar)
+                }
+
+                jenkinsTest("org.jenkins-ci.main:jenkins-test-harness:${testHarnessVersion}")
+                jenkinsTest("org.jenkins-ci.main:ui-samples-plugin:${uiSamplesVersion}",
+                        'junit:junit-dep:4.10')
             }
         }
     }

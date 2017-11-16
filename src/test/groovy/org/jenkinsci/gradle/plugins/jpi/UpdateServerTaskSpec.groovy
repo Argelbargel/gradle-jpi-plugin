@@ -71,11 +71,11 @@ class UpdateServerTaskSpec extends Specification {
 
     def 'jenkins does not contains test dependencies when disabled'() {
         setup:
-        prepareProject(BASE_PROJECT + """
+        prepareProject(BASE_PROJECT + '''
             updateServer {
                 includeTest = false
             }
-        """,
+        ''',
         ['jenkinsTest' : 'org.jenkins-ci.plugins:random-string-parameter:1.0'])
         def projectDir = new File(temporaryFolder.root, 'test')
         when:
@@ -85,8 +85,6 @@ class UpdateServerTaskSpec extends Specification {
         new File(projectDir, 'work/plugins/test.hpl').exists()
         !new File(projectDir, 'work/plugins/random-string-parameter.hpi').exists()
     }
-
-
 
     private void updateServer(projectDir) {
         GradleRunner.create()
@@ -98,9 +96,9 @@ class UpdateServerTaskSpec extends Specification {
 
     private void prepareProject(project, dependencies = [:]) {
         if (!dependencies.empty) {
-            project += "dependencies {\n"
-            dependencies.each{ k, v -> project += "$k '$v'\n" }
-            project += "}"
+            project += 'dependencies {\n'
+            dependencies.each { k, v -> project += "$k '$v'\n" }
+            project += '}'
         }
         temporaryFolder.newFolder('test', 'src', 'main', 'java')
         temporaryFolder.newFile('test/build.gradle') << project
