@@ -395,6 +395,26 @@ version = '1.2'"""
         manifest == readManifest('plugin-first-class-loader.mf')
     }
 
+    def 'whitelist classes'() {
+        setup:
+        project.with {
+            apply plugin: 'jpi'
+            group = 'org.example'
+            version = '1.2'
+            jenkinsPlugin {
+                coreVersion = '1.509.3'
+                whitelistClasses = true
+            }
+        }
+
+        when:
+        Manifest manifest = new JpiManifest(project)
+
+        then:
+        manifest == readManifest('whitelist-classes.mf')
+    }
+
+
     def 'sandbox status'() {
         setup:
         project.with {

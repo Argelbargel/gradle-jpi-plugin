@@ -83,6 +83,11 @@ class JpiManifest extends Manifest {
             mainAttributes.putValue('PluginFirstClassLoader', 'true')
         }
 
+        if (conv.whitelistClasses) {
+            mainAttributes.putValue('Jenkins-ClassFilter-Whitelisted', 'true')
+        }
+
+
         if (conv.developers) {
             mainAttributes.putValue(
                     'Plugin-Developers',

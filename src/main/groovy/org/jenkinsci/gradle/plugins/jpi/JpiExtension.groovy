@@ -107,6 +107,8 @@ class JpiExtension {
 
     boolean pluginFirstClassLoader
 
+    boolean whitelistClasses
+
     /**
      * Version of core that we depend on.
      */
